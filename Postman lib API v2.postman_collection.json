@@ -1,0 +1,344 @@
+{
+	"info": {
+		"_postman_id": "154cfff9-90b2-4260-872a-699dc296be72",
+		"name": "Postman lib API v2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37825752"
+	},
+	"item": [
+		{
+			"name": "getBooks",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/books",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getfiction",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/books?genre=fiction&checkedOut=false",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"books"
+					],
+					"query": [
+						{
+							"key": "genre",
+							"value": "fiction"
+						},
+						{
+							"key": "checkedOut",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get books by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/books/:id",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"books",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "7b8b2fe5-a384-4ba0-b172-493ca2afee33"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add book",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// save the \"id\" value from the response to a variable named \"id\"\r",
+							"const id = pm.response.json().id\r",
+							"// save the id as a collection variable named \"id\"\r",
+							"pm.collectionVariables.set(\"id\", id)\r",
+							"\r",
+							"pm.test(\"Response status code is 201\", function () {\r",
+							"  pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is less than 500ms\", function () {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has the required fields\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('object');\r",
+							"  pm.expect(responseData.id).to.exist;\r",
+							"  pm.expect(responseData.title).to.exist;\r",
+							"  pm.expect(responseData.author).to.exist;\r",
+							"  pm.expect(responseData.genre).to.exist;\r",
+							"  pm.expect(responseData.yearPublished).to.exist;\r",
+							"  pm.expect(responseData.checkedOut).to.exist;\r",
+							"  pm.expect(responseData.isPermanentCollection).to.exist;\r",
+							"  pm.expect(responseData.createdAt).to.exist;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Id is a non-empty string\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Id should be a non-empty string\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"YearPublished is a positive integer\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData.yearPublished).to.be.a('number');\r",
+							"  pm.expect(responseData.yearPublished).to.be.above(0);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "    {\r\n        \"id\": \"1727fc67-2c86-4ed7-95e3-f7836c5a6b98\",\r\n        \"title\": \"The books\",\r\n        \"author\": \"Eli\",\r\n        \"genre\": \"historeal\",\r\n        \"yearPublished\": 100,\r\n        \"checkedOut\": false,\r\n        \"isPermanentCollection\": false,\r\n        \"createdAt\": \"2024-08-21T14:16:31.939Z\"\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/books",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "checkout book",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"checkedOut\":true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/books/:id",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"books",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteBook",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/books/:id",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"books",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "skill check",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let name = pm.collectionVariables.get(\"actorname\");\r",
+							"console.log(name);\r",
+							"pm.collectionVariables.set(\"favouriteActor\",name);\r",
+							"let favname=pm.collectionVariables.get(\"favouriteActor\");\r",
+							"console.log(favname);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "student-expert",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "skillcheck",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"actorName\" : \"Aamir \"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{skillcheckBaseUrl}}/post?movieName=3 idiots",
+					"host": [
+						"{{skillcheckBaseUrl}}"
+					],
+					"path": [
+						"post"
+					],
+					"query": [
+						{
+							"key": "movieName",
+							"value": "3 idiots"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "postmanrulz",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "api-key",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"pm.test(\"Fix: Set collection level auth api-key\", function () {\r",
+					"    pm.expect(pm.collectionVariables.get(\"apiKey\")).to.not.be.null;\r",
+					"});\r",
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://library-api.postmanlabs.com"
+		},
+		{
+			"key": "id",
+			"value": ""
+		},
+		{
+			"key": "skillcheckBaseUrl",
+			"value": "https://postman-echo.com"
+		},
+		{
+			"key": "actorname",
+			"value": "Aamir",
+			"type": "string"
+		},
+		{
+			"key": "favouriteActor",
+			"value": "Aamir",
+			"type": "string"
+		}
+	]
+}
